@@ -31,7 +31,7 @@
     <table>
         <thead>
             <tr>
-                <th colspan="10"> Danh sách bệnh nhân</th>
+                <th colspan="11"> Danh sách bệnh nhân</th>
             </tr>
             <tr>
                 <th>STT</th>
@@ -43,12 +43,38 @@
                 <th>Địa chỉ</th>
                 <th>Tình trạng</th>  
                 <th>Diện tiếp xúc</th>             
-                <th>ghi chú</th>
+                <th>Ghi chú</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         <?php
-            foreach($personList as $key=>$person) {
+        foreach($personList as $key=>$person) {
+            $status = "";
+            switch($person->group) {
+                case 0:
+                    switch($person->status) {
+                        case -1:
+                            $status = "Tử vong";
+                            break;
+                        case 0:
+                            $status = "Dương tính";
+                            break;
+                        default:
+                            $status = "Âm tính $person->status lần";
+                    }
+                    break;
+                default:
+                    switch($person->status) {
+                        case -1:
+                            $status = "Tử vong";
+                            break;
+                        case 0:
+                            $status = "Âm tính";
+                            break;
+                    }
+                    break;
+            }
             $traceGroup = $person->group + 1;
             $content = "<a target='_blank' href='?controller=persons&action=detail&id=$person->identity_number'>
                                 <button>Thông tin chi tiết</button>
@@ -62,12 +88,13 @@
                 <td>'. (($person->gender == 1) ? "Nam" : "Nữ").'</td>
                 <td>'. $person->phone .'</td>
                 <td>'. $person->address .'</td>
-                <td>'. $person->status .'</td>
+                <td>'. $status .'</td>
                 <td>F'. $person->group .'</td>
+                <td>'. $person->comment .'</td>
                 <td>'. $content .'</td>
             </tr>
             ';
-            }
+        }
         ?>
         </tbody>
     </table>

@@ -87,8 +87,7 @@
                     <label for="name">Họ và tên:</label></br>
                     <input type="text" name="name" value="'.$person->name.'"></br>
                     <label for="identity_number">Số CMND:</label></br>
-                    <input type="number" value="'.$person->identity_number.'" disabled></br>
-                    <input type="number" name="identity_number" value="'.$person->identity_number.'" hidden>
+                    <input type="number" name="identity_number" value="'.$person->identity_number.'" readonly>
                     <label for="birthday">Ngày sinh:</label></br>
                     <input type="date" name="birthday" value="'.$person->birthday.'"></br>
                     <label for="gender">Giới tính:</label></br>

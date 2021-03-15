@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Patient Form</title>
+    <title>Detail Patient Form</title>
     <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
     <style>
         form {
@@ -91,7 +91,7 @@
                 <label>Ngày sinh: </label>
                 <p><?php echo $person->birthday?></p></br>
                 <label>Giới tính: </label>
-                <p><?php (($person->gender == 1) ? "Nam" : "Nữ") ?></p></br>
+                <p><?php echo (($person->gender == 1) ? "Nam" : "Nữ") ?></p></br>
                 <label>Số điện thoại: </label>
                 <p><?php echo $person->phone?></p></br>
                 <label>Địa chỉ: </label>
@@ -99,17 +99,19 @@
                 <?php   
                     switch($person->group){
                         case 0:
+                            $hospital = Hospital::getHospital($person->hospital_id);
                             echo "
                                 <label>Bệnh viện: </label>
-                                <p>$person->hospital_id</p></br>
+                                <p>$hospital->name</p></br>
                                 <label>Ngày nhập viện: </label>
                                 <p>$person->hospitalized_day</p></br>
                             ";
                             break;
                         case 1:
+                            $site = Site::getSite($person->site_id);
                             echo "
                                 <label>Khu cách ly: </label>
-                                <p>$person->site_id</p></br>
+                                <p>$site->name</p></br>
                                 <label>Ngày cách ly: </label>
                                 <p>$person->quarantined_day</p></br>
                             ";
@@ -117,7 +119,7 @@
                     }
                     $traceGroup = $person->group + 1;
                     $content = "";
-                    if (($person->comment == "Not trace") && ($person->group < 5)) {
+                    if ($person->group < 5) {
                     echo "<a target='_blank' href='?controller=persons&action=add&id=$person->identity_number'>
                                         <button>Điền thông tin người tiếp xúc (F$traceGroup)</button>
                                     </a></br></br>";
@@ -150,6 +152,31 @@
         <tbody>
         <?php
             foreach($contactPersonList as $key=>$contactPerson) {
+                $status = "";
+                switch($person->group) {
+                    case 0:
+                        switch($person->status) {
+                            case -1:
+                                $status = "Tử vong";
+                                break;
+                            case 0:
+                                $status = "Dương tính";
+                                break;
+                            default:
+                                $status = "Âm tính $person->status lần";
+                        }
+                        break;
+                    default:
+                        switch($person->status) {
+                            case -1:
+                                $status = "Tử vong";
+                                break;
+                            case 0:
+                                $status = "Âm tính";
+                                break;
+                        }
+                        break;
+                }
             echo '
             <tr>
                 <td>'. ($key + 1).'</td>
@@ -159,7 +186,7 @@
                 <td>'. (($contactPerson->gender == 1) ? "Nam" : "Nữ").'</td>
                 <td>'. $contactPerson->phone .'</td>
                 <td>'. $contactPerson->address .'</td>
-                <td>'. $contactPerson->status .'</td>
+                <td>'. $status .'</td>
                 <td>F'. $contactPerson->group .'</td>
             </tr>
             ';

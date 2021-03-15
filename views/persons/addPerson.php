@@ -131,9 +131,22 @@
                 <label for="address">Địa chỉ</label></br>
                 <input type="text" name="address"></br>
                 <label for="status">Tình trạng:</label></br>
-                <input type="text" name="status" value=""></br>
+                <input type="text" name="status" value="0" hidden>
+                <input type="text" value="<?php echo ($group == 0) ? "Dương tính" : "Âm tính" ?>" readonly></br>
                 <label for="comment">Ghi chú:</label></br>
-                <input type="text" name="comment" value="Not trace"></br>
+                <input type="text" name="comment" value="<?php
+                                                            switch($group) {
+                                                                case 0:
+                                                                    echo "Đang điều trị";
+                                                                    break;
+                                                                case 1:
+                                                                    echo "Đang cách ly";
+                                                                    break;
+                                                                default:
+                                                                    echo "Đang theo dõi";
+                                                                    break;
+                                                            }
+                                                        ?>" readonly></br>
                 <?php
                 if ($group != 0) {
                     echo
