@@ -148,10 +148,29 @@
                                                             }
                                                         ?>" readonly></br>
                 <?php
-                if ($group != 0) {
+                if ($group == 1) {
+                    $date=date_create($contactPerson->symtoms_appeared_day);
+                    date_sub($date,date_interval_create_from_date_string("3days"));
                     echo
-               '<label for="contact_day">Thời điểm tiếp xúc:</label></br>
-                <input type="date" name="contact_day"></br>
+               '<label for="contact_day">Thời điểm tiếp xúc: (từ '. (date_format($date,"Y-m-d")) .' đến '. $contactPerson->hospitalized_day .')</label></br>
+                <input type="date" name="contact_day" min="'. (date_format($date,"Y-m-d")) .'" 
+                                                      max="'. $contactPerson->hospitalized_day .'"></br>
+                <label for="contact_place">Địa điểm tiếp xúc:</label></br>
+                <input type="text" name="contact_place"></br>';
+                }
+                if ($group == 2) {
+                    echo
+               '<label for="contact_day">Thời điểm tiếp xúc: (từ '. $contactPerson->contact_day .' đến '. $contactPerson->quarantined_day .')</label></br>
+                <input type="date" name="contact_day" min="'. $contactPerson->contact_day .'" 
+                                                      max="'. $contactPerson->quarantined_day .'"></br>
+                <label for="contact_place">Địa điểm tiếp xúc:</label></br>
+                <input type="text" name="contact_place"></br>';
+                }
+                if ($group > 2) {
+                    echo
+               '<label for="contact_day">Thời điểm tiếp xúc: (từ '. $contactPerson->monitor_day .')</label></br>
+                <input type="date" name="contact_day" min="'. $contactPerson->monitor_day .'" 
+                                                      max="'. date("Y-m-d") .'"></br>
                 <label for="contact_place">Địa điểm tiếp xúc:</label></br>
                 <input type="text" name="contact_place"></br>';
                 }

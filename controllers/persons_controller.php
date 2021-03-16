@@ -9,6 +9,21 @@ class PersonsController
     function list()
     {
         $personList = Person::getAll();
+        $today = date("Y-m-d");
+        foreach($personList as $person) {
+            if($person->group > 0) {
+                $date=date_create($person->monitor_day);
+                date_add($date,date_interval_create_from_date_string("14days"));
+                $end_day = date_format($date,"Y-m-d");
+                if($today>$end_day) {
+                    if($person->group==1) $new_comment = "Có thể ngừng cách ly";
+                    else $new_comment = "Có thể ngừng theo dõi";
+                    if($person->comment != $new_comment)
+                    Person::updateColumn($person->identity_number, "comment", $new_comment);
+                }
+            }
+        }
+        $personList = Person::getAll();
         include_once("views/persons/listPerson.php");
     }
 
@@ -30,6 +45,8 @@ class PersonsController
             $idExistence = Person::checkExistedId($addedId);
             if ($group == 0) {
                 if (isset($idExistence)) {
+                    if($idExistence->group == 1) Person::removeQuarantinedPerson($addedId);
+                    $this->inputPatientInfo($idExistence);
                     $this->reclassify($addedId, 0);
                 }
                 else {
@@ -53,6 +70,39 @@ class PersonsController
             }
             include_once("views/persons/addPerson.php");
         }
+    }
+
+    function remove() 
+    {
+        $id = $_GET["id"];
+        $person = Person::getInfo($id);
+        Contact::removeContact($id);
+        $group = $person->group;
+        switch($group) {
+            case 0:
+                $hospital = Hospital::getHospital($person->hospital_id);
+                $hospital->changeNumber(-1);
+                Person::removePatient($id);
+                if($person->status == -1) {
+                    Person::updateColumn($id, "status", -2);
+                    Person::updateColumn($id, "comment", "Đã xuất viện");
+                }
+                if($person->status == 3) {
+                    Person::updateColumn($id, "status", 4);
+                    Person::updateColumn($id, "comment", "Đã xuất viện");
+                }
+                break;
+            case 1:    
+                $site = Site::getSite($person->site_id);
+                $site->changeNumber(-1);
+                Person::removeQuarantinedPerson($id);
+                Person::removePerson($id);
+                break;
+            default:
+                Person::removePerson($id);
+                break;
+        }
+        header("location:?controller=persons&action=list");
     }
 
     function detail() 
@@ -80,6 +130,24 @@ class PersonsController
             $person = Person::getInfo($id);
             include_once("views/persons/editPerson.php");
         }
+    }
+
+    function change()
+    {
+        $id = $_GET["id"];
+        $act = $_GET["change"];
+        switch($act) {
+            case "dead":
+                Person::updateColumn($id, "status", -1);
+                Person::updateColumn($id, "comment", "Có thể xuất viện");
+                break;
+            case "positive":
+                
+                break;
+            case "negative":
+                break;
+        }
+        header("location:?controller=persons&action=detail&id=$id");
     }
 
     function updatePersonInfo()
@@ -139,6 +207,17 @@ class PersonsController
         $address = $_POST["address"];
         $status = $_POST["status"];
         $comment = $_POST["comment"];
+        switch($group) {
+            case 0:
+                $monitor_day = $_POST["hospitalized_day"];
+                break;
+            case 1:
+                $monitor_day = $_POST["quarantined_day"];
+                break;
+            default:
+                $monitor_day = $_POST["contact_day"];
+                break;
+        }
 
 
         $patient = new Person();
@@ -151,6 +230,7 @@ class PersonsController
         $patient->status = $status;
         $patient->comment = $comment;
         $patient->group = $group;
+        $patient->monitor_day = $monitor_day;
 
         $patient->saveInfo();
 

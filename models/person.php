@@ -10,6 +10,7 @@ class Person {
     public $status;
     public $comment;
     public $group;
+    public $monitor_day;
 
     public $symtoms_appeared_day;
     public $hospitalized_day;
@@ -43,6 +44,7 @@ class Person {
             $person->status = $row["status"];
             $person->comment = $row["comment"];
             $person->group = $row["group"];
+            $person->monitor_day = $row["monitor_day"];
 
             $person_list[] = $person;
         }
@@ -66,16 +68,6 @@ class Person {
     }
 
     static function removePerson($id) {
-        $group = self::getColumn($id, "`group`");
-        
-        switch($group) {
-            case 0:
-                self::removePatient($id);
-                break;
-            case 1:
-                self::removeQuarantinedPerson($id);
-                break;
-        }
 
         $sql = "DELETE FROM persons
                 WHERE identity_number = $id";
@@ -87,13 +79,12 @@ class Person {
 
     static function updateColumn($id, $columnName, $value) {
         $sql = "UPDATE persons
-                SET $columnName = $value
+                SET $columnName = '$value'
                 WHERE identity_number = $id";
 
         $stmt = DB::connect()->prepare($sql);
  
         $stmt->execute();
-        echo "update okay";
     }
     
     static function checkExistedId($id) 
@@ -126,6 +117,7 @@ class Person {
             $person->status = $row["status"];
             $person->comment = $row["comment"];
             $person->group = $row["group"];
+            $person->monitor_day = $row["monitor_day"];
         switch($person->group) {
             case 0:
                 $person = self::getPatientInfo($person);
@@ -168,14 +160,15 @@ class Person {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $person->quarantined_day = $row["quarantined_day"];
+        $person->contact_day = $row["contact_day"];
         $person->site_id = $row["site_id"];
 
         return $person;
     }
 
     public function saveInfo() {
-        $sql = "INSERT INTO persons(name, birthday, gender, identity_number, phone, address, status, comment, `group`)
-                            VALUES(:name, :birthday, :gender, :identity_number, :phone, :address, :status, :comment, :group)";
+        $sql = "INSERT INTO persons(name, birthday, gender, identity_number, phone, address, status, comment, `group`, monitor_day)
+                            VALUES(:name, :birthday, :gender, :identity_number, :phone, :address, :status, :comment, :group, :monitor_day)";
 
         $stmt = DB::connect()->prepare($sql);
 
@@ -188,7 +181,8 @@ class Person {
                     "address" => $this->address, 
                     "status" => $this->status, 
                     "comment" => $this->comment, 
-                    "group" => $this->group
+                    "group" => $this->group,
+                    "monitor_day" => $this->monitor_day
         );
         return $stmt->execute($info);
     }

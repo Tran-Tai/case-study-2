@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,19 +14,27 @@
             border: 2px solid black;
         }
 
-        th, td {
+        th,
+        td {
             padding: 5px;
             border: 1px solid grey;
         }
 
+        .input_info {
+            margin: 20px 100px;
+            padding: 5px;
+            text-align: center;
+            font-size: 18px;
+        }
     </style>
 </head>
+
 <body>
     <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <table>
         <thead>
             <tr>
-                <th colspan="7">Danh sách bệnh viện</th>
+                <th class="text-center" colspan="7">Danh sách bệnh viện</th>
             </tr>
             <tr>
                 <th>STT</th>
@@ -38,29 +47,32 @@
             </tr>
         </thead>
         <tbody>
-        <?php 
-            foreach ($hospitalList as $key=>$hospital) {
-            $content = "<a href='?controller=hospitals&action=detail&id=$hospital->id'>
+            <?php
+            foreach ($hospitalList as $key => $hospital) {
+                $content = "<a href='?controller=hospitals&action=detail&id=$hospital->id'>
                             <button>Chi tiết</button>
                         </a>";
                 echo "
             <tr>
-                <td>". ($key + 1)."</td>
+                <td>" . ($key + 1) . "</td>
                 <td>$hospital->name</td>
                 <td>$hospital->address</td>
                 <td>$hospital->capacity</td>
-                <td>".$hospital->capacity - $hospital->used_bed."</td>
+                <td>" . $hospital->capacity - $hospital->used_bed . "</td>
                 <td>$hospital->phone_number</td>
                 <td>$content</td>
             </tr>
             ";
             }
-        ?>
+            ?>
         </tbody>
     </table>
-    <a href='?controller=hospitals&action=add'>
-        <button>Thêm thông tin bệnh viện mới</button>
-    </a>
+    <div class="text-center">
+        <a href='?controller=hospitals&action=add'>
+            <button class="input_info">Thêm thông tin bệnh viện mới</button>
+        </a>
+    </div>
 
 </body>
+
 </html>
