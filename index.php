@@ -11,13 +11,13 @@ include_once("DB.php");
     }
 
     function insertActive($controllerName)
-{
-    global $controller;
-    if ($controller == $controllerName)
     {
-    echo "active";
+        $controller = $_GET["controller"];
+        if ($controller == $controllerName)
+        {
+            echo "active";
+        }
     }
-}
 
     require_once("controllers/" . $controller . "_controller.php");
 

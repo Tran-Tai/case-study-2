@@ -155,25 +155,47 @@
                             </a></br></br>";
                     }
                 }
-                elseif ($person->group == 1) {
-                    if ($person->comment == "Có thể ngừng cách ly") {
-                        echo "<a href='?controller=persons&action=remove&id=$person->identity_number'>
-                                <button style='color:green;'>Ngừng cách ly</button>
-                            </a></br></br>";
-                    }
-                    echo "<a href='?controller=persons&action=change&id=$person->identity_number&change=positive'>
-                            <button style='color:orange;'>Dương tính</button>
-                        </a></br></br>";
-                }
                 else {
-                    if ($person->comment == "Có thể ngừng theo dõi") {
-                        echo "<a href='?controller=persons&action=remove&id=$person->identity_number'>
-                                <button style='color:green;'>Ngừng theo dõi</button>
-                            </a></br></br>";
+                    if ($person->group == 1) {
+                        if ($person->comment == "Có thể ngừng cách ly") {
+                            echo "<a href='?controller=persons&action=remove&id=$person->identity_number'>
+                                    <button style='color:green;'>Ngừng cách ly</button>
+                                </a></br></br>";
+                        }
                     }
-                    echo "<a href='?controller=persons&action=change&id=$person->identity_number&change=positive'>
-                            <button style='color:orange;'>Dương tính</button>
-                        </a></br></br>";
+                    else {
+                        if ($person->comment == "Có thể ngừng theo dõi") {
+                            echo "<a href='?controller=persons&action=remove&id=$person->identity_number'>
+                                    <button style='color:green;'>Ngừng theo dõi</button>
+                                </a></br></br>";
+                        }
+                    }
+                    // echo "<a href='?controller=persons&action=change&id=$person->identity_number&change=positive'>
+                    //         <button style='color:orange;'>Dương tính</button>
+                    //     </a></br></br>";
+                    $hospitalOptions = "";
+                    foreach($hospitalList as $hospital) {
+                        $hospitalOptions .= "<option value=".$hospital->id.">$hospital->name</option>";
+                    }
+                    echo '
+                        <button onclick="displayForm()" style="color:orange;">Dương tính</button>
+                        <form id="positiveForm" style="width:90%; display: none;" method="POST">
+                            <label for="symtoms_appeared_day">Ngày khởi bệnh</label></br>
+                            <input type="date" name="symtoms_appeared_day"></br>
+                            <label for="hospitalized_day">Ngày nhập viện:</label></br>
+                            <input type="date" name="hospitalized_day"></br>
+                            <label for="hospital_id">Bệnh viện:</label></br>
+                            <select name="hospital_id">
+                            '.$hospitalOptions.'
+                            </select></br>
+                            <input type="submit" value="Xác nhận">
+                        </form>
+                        <script>
+                            function displayForm() {
+                                document.getElementById("positiveForm").style.display = "block";
+                            }
+                        </script>
+                        ';
                 }
 
                 ?>

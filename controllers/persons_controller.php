@@ -108,15 +108,20 @@ class PersonsController
     function detail() 
     {
         $id = $_GET["id"];
-        
-        $person = Person::getInfo($id);
-        $idList = Contact::getContactIdList($id);
-        $contactPersonList = [];
-        foreach ($idList as $contactId) {
-            $contactPerson = Person::getInfo($contactId);
-            $contactPersonList[] = $contactPerson;
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            header("location:?controller=persons&action=change&id=$id&change=positive");
         }
-        include_once("views/persons/detailPerson.php");
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $hospitalList = Hospital::getAll();
+            $person = Person::getInfo($id);
+            $idList = Contact::getContactIdList($id);
+            $contactPersonList = [];
+            foreach ($idList as $contactId) {
+                $contactPerson = Person::getInfo($contactId);
+                $contactPersonList[] = $contactPerson;
+            }
+            include_once("views/persons/detailPerson.php");
+        }
     }
 
     function edit() 
@@ -142,9 +147,31 @@ class PersonsController
                 Person::updateColumn($id, "comment", "Có thể xuất viện");
                 break;
             case "positive":
-                
+                $person = Person::getInfo($id);
+                $group = $person->group;
+                if ($group == 0) {
+                    if($person->status == 3) {
+                        Person::updateColumn($id, "comment", "Đang điều trị");
+                    }
+                    Person::updateColumn($id, "status", 0);
+                }
+                else {
+                    if ($group == 1) {
+                        $site = Site::getSite($person->site_id);
+                        $site->changeNumber(-1);
+                        Person::removeQuarantinedPerson($id);
+                    }
+                    Person::updateColumn($id, "comment", "Đang điều trị");
+                    $this->inputPatientInfo($id);
+                    $this->reclassify($id, 0);
+                }
                 break;
             case "negative":
+                $person = Person::getInfo($id);
+                $status = $person->status;
+                $status += 1;
+                Person::updateColumn($id, "status", $status);
+                if ($status == 3) Person::updateColumn($id, "comment", "Có thể xuất viện");
                 break;
         }
         header("location:?controller=persons&action=detail&id=$id");

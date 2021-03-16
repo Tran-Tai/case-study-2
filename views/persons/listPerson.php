@@ -65,7 +65,7 @@
                                 $status = "Dương tính";
                                 break;
                             default:
-                                $status = "Âm tính $person->status lần";
+                                $status = "Âm tính lần $person->status";
                         }
                         break;
                     default:
