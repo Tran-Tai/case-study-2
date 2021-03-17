@@ -105,7 +105,8 @@
                 <label for="contact_day">Thời điểm tiếp xúc:</label></br>
                 <input type="date" name="contact_day" value="<?php echo $contact->contact_day ?>" readonly></br>
                 <label for="contact_place">Địa điểm tiếp xúc:</label></br>
-                <input type="text" name="contact_place" value="<?php echo $contact->contact_place ?>" readonly></br>';
+                <input type="text" name="contact_place" value="<?php echo $contact->contact_place ?>" readonly></br>
+                <input type="text" name="contact_id" value="<?php echo $person->identity_number ?>" readonly>
                 <?php
                     $siteOptions = "";
                     foreach($siteList as $site) {

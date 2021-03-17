@@ -8,23 +8,28 @@ class PersonsController
 {
     function list()
     {
+        $this->checkDayAndUpdate();
+        $personList = Person::getAll();
+        include_once("views/persons/listPerson.php");
+    }
+
+    protected function checkDayAndUpdate()
+    {
         $personList = Person::getAll();
         $today = date("Y-m-d");
-        foreach($personList as $person) {
-            if($person->group > 0) {
-                $date=date_create($person->monitor_day);
-                date_add($date,date_interval_create_from_date_string("14days"));
-                $end_day = date_format($date,"Y-m-d");
-                if($today>$end_day) {
-                    if($person->group==1) $new_comment = "Có thể ngừng cách ly";
+        foreach ($personList as $person) {
+            if ($person->group > 0) {
+                $date = date_create($person->monitor_day);
+                date_add($date, date_interval_create_from_date_string("14days"));
+                $end_day = date_format($date, "Y-m-d");
+                if ($today > $end_day) {
+                    if ($person->group == 1) $new_comment = "Có thể ngừng cách ly";
                     else $new_comment = "Có thể ngừng theo dõi";
-                    if($person->comment != $new_comment)
-                    Person::updateColumn($person->identity_number, "comment", $new_comment);
+                    if ($person->comment != $new_comment)
+                        Person::updateColumn($person->identity_number, "comment", $new_comment);
                 }
             }
         }
-        $personList = Person::getAll();
-        include_once("views/persons/listPerson.php");
     }
 
     function add()
@@ -34,18 +39,20 @@ class PersonsController
             $contactPerson = Person::getInfo($id);
             $group = $contactPerson->group + 1;
         } else $group = 0;
+        $hospitalList = Hospital::getAll();
+        $siteList = Site::getAll();
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $hospitalList = Hospital::getAll();
-            $siteList = Site::getAll();
             include_once("views/persons/addPerson.php");
         }
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {            
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $addedId = $_POST["identity_number"];
-            if ($addedId == $id) {return;}
+            if ($addedId == $id) {
+                return;
+            }
             $idExistence = Person::checkExistedId($addedId);
             if ($group == 0) {
                 if (isset($idExistence)) {
-                    if($idExistence->group == 1) {
+                    if ($idExistence->group == 1) {
                         $site = Site::getSite($addedId->site_id);
                         $site->changeNumber(-1);
                         Person::removeQuarantinedPerson($addedId);
@@ -53,8 +60,7 @@ class PersonsController
                     $this->inputPatientInfo($idExistence);
                     Person::updateColumn($addedId, "comment", "Đang điều trị");
                     $this->reclassify($addedId, 0);
-                }
-                else {
+                } else {
                     $this->inputPersonInfo($group);
                 }
             } else {
@@ -77,27 +83,27 @@ class PersonsController
         }
     }
 
-    function remove() 
+    function remove()
     {
         $id = $_GET["id"];
         $person = Person::getInfo($id);
         Contact::removeContact($id);
         $group = $person->group;
-        switch($group) {
+        switch ($group) {
             case 0:
                 $hospital = Hospital::getHospital($person->hospital_id);
                 $hospital->changeNumber(-1);
                 Person::removePatient($id);
-                if($person->status == -1) {
+                if ($person->status == -1) {
                     Person::updateColumn($id, "status", -2);
                     Person::updateColumn($id, "comment", "Đã xuất viện");
                 }
-                if($person->status == 3) {
+                if ($person->status == 3) {
                     Person::updateColumn($id, "status", 4);
                     Person::updateColumn($id, "comment", "Đã xuất viện");
                 }
                 break;
-            case 1:    
+            case 1:
                 $site = Site::getSite($person->site_id);
                 $site->changeNumber(-1);
                 Person::removeQuarantinedPerson($id);
@@ -110,7 +116,7 @@ class PersonsController
         header("location:?controller=persons&action=list");
     }
 
-    function detail() 
+    function detail()
     {
         $id = $_GET["id"];
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -131,7 +137,7 @@ class PersonsController
         }
     }
 
-    function edit() 
+    function edit()
     {
         $id = $_GET["id"];
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -148,21 +154,22 @@ class PersonsController
     {
         $id = $_GET["id"];
         $act = $_GET["change"];
-        switch($act) {
+        switch ($act) {
             case "dead":
                 Person::updateColumn($id, "status", -1);
                 Person::updateColumn($id, "comment", "Có thể xuất viện");
+                header("location:?controller=persons&action=detail&id=$id");
                 break;
             case "positive":
                 $person = Person::getInfo($id);
                 $group = $person->group;
                 if ($group == 0) {
-                    if($person->status == 3) {
+                    if ($person->status == 3) {
                         Person::updateColumn($id, "comment", "Đang điều trị");
                     }
                     Person::updateColumn($id, "status", 0);
-                }
-                else {
+                    header("location:?controller=persons&action=detail&id=$id");
+                } else {
                     $this->markNewPersons($id);
                     if ($group == 1) {
                         $site = Site::getSite($person->site_id);
@@ -171,7 +178,7 @@ class PersonsController
                     }
                     $this->reclassify($id, 0);
                     Person::updateColumn($id, "comment", "Đang điều trị");
-                    //$this->requestInfo($newPersonList, $id);
+                    header("location:?controller=persons&action=requestInfo&id=$id");
                 }
                 break;
             case "negative":
@@ -180,9 +187,9 @@ class PersonsController
                 $status += 1;
                 Person::updateColumn($id, "status", $status);
                 if ($status == 3) Person::updateColumn($id, "comment", "Có thể xuất viện");
+                header("location:?controller=persons&action=detail&id=$id");
                 break;
         }
-        header("location:?controller=persons&action=detail&id=$id");
     }
 
     function updatePersonInfo()
@@ -210,7 +217,8 @@ class PersonsController
         $patient->updateInfo();
     }
 
-    protected function markNewPersons($id) {
+    protected function markNewPersons($id)
+    {
         $idList = Contact::getContactIdList($id);
         foreach ($idList as $contactId) {
             $contactPerson = Person::getInfo($contactId);
@@ -220,31 +228,34 @@ class PersonsController
         }
     }
 
-    protected function getNewPersons($id) {
+    protected function getNewPersons($id)
+    {
         $idList = Contact::getContactIdList($id);
         $newPersonList = [];
         foreach ($idList as $contactId) {
             $contactPerson = Person::getInfo($contactId);
-            if ($contactPerson->status == 1) {
+            if (($contactPerson->status == 1) && ($contactPerson->group == 1)) {
                 $newPersonList[] = $contactPerson;
             }
         }
         return $newPersonList;
     }
 
-    function requestInfo() 
+    function requestInfo()
     {
         $id = $_GET["id"];
         $siteList = Site::getAll();
-        $personList = $this->getNewPersons($id);
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if (isset($person)) $this->inputQuanrantinedPersonInfo($person);
+            $contact_id = $_POST["contact_id"];
+            $contact_person = Person::getInfo($contact_id);
+            Person::updateColumn($contact_id, "status", 0);
+            $this->inputQuanrantinedPersonInfo($contact_person);
         }
+        $personList = $this->getNewPersons($id);
         if (count($personList) != 0) {
             $person = array_pop($personList);
             include_once("views/persons/requestInfo.php");
-        }
-        else header("location:?controller=persons&action=detail&id=$id");
+        } else header("location:?controller=persons&action=list");
     }
 
     protected function reclassify($id, $group)
@@ -254,7 +265,9 @@ class PersonsController
         $traceLimit = 5;
         $trace = ($person->group < $traceLimit) ? true : false;
         Person::updateColumn($id, "`group`", $group);
-        if ($group == 1) {Person::updateColumn($id, "comment", "Đang cách ly");}
+        if ($group == 1) {
+            Person::updateColumn($id, "comment", "Đang cách ly");
+        }
         if ($trace) {
             $idList = Contact::getContactIdList($id);
             //var_dump($idList);
@@ -280,7 +293,7 @@ class PersonsController
         $address = $_POST["address"];
         $status = $_POST["status"];
         $comment = $_POST["comment"];
-        switch($group) {
+        switch ($group) {
             case 0:
                 $monitor_day = $_POST["hospitalized_day"];
                 break;

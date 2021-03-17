@@ -123,7 +123,9 @@ class Person {
                 $person = self::getPatientInfo($person);
                 break;
             case 1:
+                if ($person->status != 1) {
                 $person = self::getQuarantinedPersonInfo($person);
+                }
                 break;
         }   
         return $person;

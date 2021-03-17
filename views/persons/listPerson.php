@@ -58,11 +58,17 @@
                 switch ($person->group) {
                     case 0:
                         switch ($person->status) {
+                            case -2:
+                                $status = "Đã bàn giao";
+                                break;
                             case -1:
                                 $status = "Tử vong";
                                 break;
                             case 0:
                                 $status = "Dương tính";
+                                break;
+                            case 4:
+                                $status = "Đã bình phục";
                                 break;
                             default:
                                 $status = "Âm tính lần $person->status";
@@ -73,9 +79,12 @@
                         break;
                 }
                 $traceGroup = $person->group + 1;
+                if ($person->status >= 0 && $person->status < 4) {
                 $content = "<a target='_blank' href='?controller=persons&action=detail&id=$person->identity_number'>
                                 <button>Thông tin chi tiết</button>
                             </a>";
+                } else $content ="";
+                if ($person->status >= 0 && $person->status < 4)
                 echo '
             <tr>
                 <td>' . ($key + 1) . '</td>
