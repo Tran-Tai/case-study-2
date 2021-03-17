@@ -187,7 +187,7 @@
                             <label for="hospital_id">Bệnh viện:</label></br>
                             <select name="hospital_id">
                             '.$hospitalOptions.'
-                            </select></br>
+                            </select></br></br>
                             <input type="submit" value="Xác nhận">
                         </form>
                         <script>

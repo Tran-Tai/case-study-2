@@ -37,6 +37,27 @@ class Contact {
         else return true;
     }
 
+    static function getContact($id1, $id2) 
+    {
+        $sql = "SELECT * FROM contacts
+                WHERE (first_person_id = $id1 and second_person_id = $id2)
+                    OR (first_person_id = $id2 and second_person_id = $id1)";
+        $stmt = DB::connect()->prepare($sql);
+        
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $contact = new Contact();
+
+        $contact->first_person_id = $row["first_person_id"];
+        $contact->second_person_id = $row["second_person_id"];
+        $contact->contact_day = $row["contact_day"];
+        $contact->contact_place = $row["contact_place"];
+
+        return $contact;
+    }
+
     static function getContactIdList($id)
     {
         $sql = "SELECT first_person_id AS contact_id FROM contacts

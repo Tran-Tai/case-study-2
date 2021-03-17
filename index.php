@@ -12,7 +12,7 @@ include_once("DB.php");
 
     function insertActive($controllerName)
     {
-        $controller = $_GET["controller"];
+        $controller = $_GET["controller"] ?? "persons";
         if ($controller == $controllerName)
         {
             echo "active";

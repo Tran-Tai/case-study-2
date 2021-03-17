@@ -69,14 +69,7 @@
                         }
                         break;
                     default:
-                        switch ($person->status) {
-                            case -1:
-                                $status = "Tử vong";
-                                break;
-                            case 0:
-                                $status = "Âm tính";
-                                break;
-                        }
+                        $status = "Âm tính";
                         break;
                 }
                 $traceGroup = $person->group + 1;

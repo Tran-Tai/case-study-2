@@ -45,8 +45,13 @@ class PersonsController
             $idExistence = Person::checkExistedId($addedId);
             if ($group == 0) {
                 if (isset($idExistence)) {
-                    if($idExistence->group == 1) Person::removeQuarantinedPerson($addedId);
+                    if($idExistence->group == 1) {
+                        $site = Site::getSite($addedId->site_id);
+                        $site->changeNumber(-1);
+                        Person::removeQuarantinedPerson($addedId);
+                    }
                     $this->inputPatientInfo($idExistence);
+                    Person::updateColumn($addedId, "comment", "Đang điều trị");
                     $this->reclassify($addedId, 0);
                 }
                 else {
@@ -109,6 +114,8 @@ class PersonsController
     {
         $id = $_GET["id"];
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $patient = Person::getInfo($id);
+            $this->inputPatientInfo($patient);
             header("location:?controller=persons&action=change&id=$id&change=positive");
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -156,14 +163,15 @@ class PersonsController
                     Person::updateColumn($id, "status", 0);
                 }
                 else {
+                    $this->markNewPersons($id);
                     if ($group == 1) {
                         $site = Site::getSite($person->site_id);
                         $site->changeNumber(-1);
                         Person::removeQuarantinedPerson($id);
                     }
-                    Person::updateColumn($id, "comment", "Đang điều trị");
-                    $this->inputPatientInfo($id);
                     $this->reclassify($id, 0);
+                    Person::updateColumn($id, "comment", "Đang điều trị");
+                    //$this->requestInfo($newPersonList, $id);
                 }
                 break;
             case "negative":
@@ -202,6 +210,43 @@ class PersonsController
         $patient->updateInfo();
     }
 
+    protected function markNewPersons($id) {
+        $idList = Contact::getContactIdList($id);
+        foreach ($idList as $contactId) {
+            $contactPerson = Person::getInfo($contactId);
+            if ($contactPerson->group > 1) {
+                Person::updateColumn($contactId, "status", 1);
+            }
+        }
+    }
+
+    protected function getNewPersons($id) {
+        $idList = Contact::getContactIdList($id);
+        $newPersonList = [];
+        foreach ($idList as $contactId) {
+            $contactPerson = Person::getInfo($contactId);
+            if ($contactPerson->status == 1) {
+                $newPersonList[] = $contactPerson;
+            }
+        }
+        return $newPersonList;
+    }
+
+    function requestInfo() 
+    {
+        $id = $_GET["id"];
+        $siteList = Site::getAll();
+        $personList = $this->getNewPersons($id);
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($person)) $this->inputQuanrantinedPersonInfo($person);
+        }
+        if (count($personList) != 0) {
+            $person = array_pop($personList);
+            include_once("views/persons/requestInfo.php");
+        }
+        else header("location:?controller=persons&action=detail&id=$id");
+    }
+
     protected function reclassify($id, $group)
     {
         //echo "run function";
@@ -209,6 +254,7 @@ class PersonsController
         $traceLimit = 5;
         $trace = ($person->group < $traceLimit) ? true : false;
         Person::updateColumn($id, "`group`", $group);
+        if ($group == 1) {Person::updateColumn($id, "comment", "Đang cách ly");}
         if ($trace) {
             $idList = Contact::getContactIdList($id);
             //var_dump($idList);

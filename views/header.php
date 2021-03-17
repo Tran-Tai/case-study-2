@@ -1,5 +1,5 @@
 
-    <nav class="navbar navbar-light bg-light justify-content-center">
+    <nav class="navbar navbar-dark bg-light justify-content-center">
       <ul class="nav nav-pills">
         <li class="nav-item">
           <a class="nav-link <?php insertActive("persons") ?>" + href="?controller=persons&action=list"> Persons </a>
