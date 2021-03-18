@@ -9,7 +9,27 @@ class PersonsController
     function list()
     {
         $this->checkDayAndUpdate();
-        $personList = Person::getAll();
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $category = $_POST["category"] ?? NULL;
+            $keyword = $_POST["search"] ?? NULL;
+            $type = $_POST["type"] ?? "1";
+            if ($category == "gender") {
+                if (str_contains("Nam", $keyword) && str_contains("Nữ", $keyword)) $keyword = NULL;
+                else {
+                    if (str_contains("Nam", $keyword)) $keyword = 1;
+                    if (str_contains("Nữ", $keyword)) $keyword = 0;
+                }
+            }
+            if ($category == "`group`") {
+                if (substr($keyword,0,1) == "F") {
+                    $keyword = substr($keyword,1);
+                    }
+            }
+            $personList = Person::search($category, $keyword, $type);
+        }
+        else {
+            $personList = Person::getAll();
+        }
         include_once("views/persons/listPerson.php");
     }
 
@@ -52,14 +72,17 @@ class PersonsController
             $idExistence = Person::checkExistedId($addedId);
             if ($group == 0) {
                 if (isset($idExistence)) {
-                    if ($idExistence->group == 1) {
-                        $site = Site::getSite($addedId->site_id);
+                    $addedPerson = Person::getInfo($addedId);
+                    $this->markNewPersons($addedId);
+                    if ($addedPerson->group == 1) {
+                        $site = Site::getSite($addedPerson->site_id);
                         $site->changeNumber(-1);
                         Person::removeQuarantinedPerson($addedId);
                     }
                     $this->inputPatientInfo($idExistence);
-                    Person::updateColumn($addedId, "comment", "Đang điều trị");
                     $this->reclassify($addedId, 0);
+                    Person::updateColumn($addedId, "comment", "Đang điều trị");
+                    header("location:?controller=persons&action=requestInfo&id=$addedId");
                 } else {
                     $this->inputPersonInfo($group);
                 }
@@ -254,13 +277,13 @@ class PersonsController
         $personList = $this->getNewPersons($id);
         if (count($personList) != 0) {
             $person = array_pop($personList);
+            $contact = Contact::getContact($person->identity_number, $id);
             include_once("views/persons/requestInfo.php");
         } else header("location:?controller=persons&action=list");
     }
 
     protected function reclassify($id, $group)
     {
-        //echo "run function";
         $person = Person::getInfo($id);
         $traceLimit = 5;
         $trace = ($person->group < $traceLimit) ? true : false;
@@ -270,12 +293,8 @@ class PersonsController
         }
         if ($trace) {
             $idList = Contact::getContactIdList($id);
-            //var_dump($idList);
             foreach ($idList as $contactId) {
-                //var_dump($contactId);
-                //echo "<br/>";
                 $contactPerson = Person::getInfo($contactId);
-                //echo $contactPerson->group - $group . "<br/>";
                 if ($contactPerson->group - $group > 1) {
                     $this->reclassify($contactId, $group + 1);
                 }

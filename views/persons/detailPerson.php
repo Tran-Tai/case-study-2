@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Patient Form</title>
     <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
     <style>
         form {
             width: 50%;
@@ -38,7 +40,8 @@
         input,
         p {
             padding: 2px;
-            margin: 3px;
+            margin-top: 0px;
+            margin-bottom: 3px;
         }
 
         input[type="text"] {
@@ -67,7 +70,7 @@
         }
 
         .input_patient_info {
-            margin: 20px 120px;
+            margin: 10px 120px;
             padding: 10px;
             text-align: center;
             font-size: 20px;
@@ -77,44 +80,44 @@
 
 <body>
     <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
-    <div>
+    <div class="text-center">
         <h1>Thông tin chi tiết bệnh nhân</h1>
     </div>
     <div>
-        <div class='info'>
+        <div class='info mx-auto'>
             <fieldset>
                 <legend>Thông tin <?php echo (($person->group == 0) ? "bệnh nhân" : "người nghi nhiễm") ?>
                     (F<?php echo $person->group ?>)</legend>
                 <label>Họ và tên: </label>
-                <p><?php echo $person->name ?></p></br>
+                <p><?php echo $person->name ?></p>
                 <label>Số CMND: </label>
-                <p><?php echo $person->identity_number ?></p></br>
+                <p><?php echo $person->identity_number ?></p>
                 <label>Ngày sinh: </label>
-                <p><?php echo $person->birthday ?></p></br>
+                <p><?php echo $person->birthday ?></p>
                 <label>Giới tính: </label>
-                <p><?php echo (($person->gender == 1) ? "Nam" : "Nữ") ?></p></br>
+                <p><?php echo (($person->gender == 1) ? "Nam" : "Nữ") ?></p>
                 <label>Số điện thoại: </label>
-                <p><?php echo $person->phone ?></p></br>
+                <p><?php echo $person->phone ?></p>
                 <label>Địa chỉ: </label>
-                <p><?php echo $person->address ?></p></br>
+                <p><?php echo $person->address ?></p>
                 <?php
                 switch ($person->group) {
                     case 0:
                         $hospital = Hospital::getHospital($person->hospital_id);
                         echo "
                                 <label>Bệnh viện: </label>
-                                <p>$hospital->name</p></br>
+                                <p>$hospital->name</p>
                                 <label>Ngày nhập viện: </label>
-                                <p>$person->hospitalized_day</p></br>
+                                <p>$person->hospitalized_day</p>
                             ";
                         break;
                     case 1:
                         $site = Site::getSite($person->site_id);
                         echo "
                                 <label>Khu cách ly: </label>
-                                <p>$site->name</p></br>
+                                <p>$site->name</p>
                                 <label>Ngày cách ly: </label>
-                                <p>$person->quarantined_day</p></br>
+                                <p>$person->quarantined_day</p>
                             ";
                         break;
                 }
@@ -170,9 +173,7 @@
                                 </a></br></br>";
                         }
                     }
-                    // echo "<a href='?controller=persons&action=change&id=$person->identity_number&change=positive'>
-                    //         <button style='color:orange;'>Dương tính</button>
-                    //     </a></br></br>";
+
                     $hospitalOptions = "";
                     foreach($hospitalList as $hospital) {
                         $hospitalOptions .= "<option value=".$hospital->id.">$hospital->name</option>";

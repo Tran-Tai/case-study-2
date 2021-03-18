@@ -22,6 +22,63 @@ class Person {
 
     static function getAll() {
         $sql = "SELECT * FROM persons
+                WHERE `status` BETWEEN 0 AND 3
+                ORDER BY `group`";
+
+        $stmt = DB::connect()->prepare($sql);
+ 
+        $stmt->execute();
+
+        $rawData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $person_list = [];
+
+        foreach ($rawData as $row)
+        {
+            $person = new Person();
+            $person->identity_number = $row["identity_number"];
+            $person->name = $row["name"];
+            $person->birthday = $row["birthday"];
+            $person->gender = $row["gender"];
+            $person->phone = $row["phone"];
+            $person->address = $row["address"];
+            $person->status = $row["status"];
+            $person->comment = $row["comment"];
+            $person->group = $row["group"];
+            $person->monitor_day = $row["monitor_day"];
+
+            $person_list[] = $person;
+        }
+
+        return $person_list;
+    }
+
+    static function search($category, $keyword, $type) {
+        $text = "";
+        switch ($type) {
+            case "1":
+                $text = "WHERE (`status` BETWEEN 0 AND 3)";
+                break;
+            case "2":
+                $text = "WHERE (`status` = 4)";
+                break;
+            case "3":
+                $text = "WHERE (`status` < 0)";
+                break;
+            case "4":
+                $text = "WHERE (`status` BETWEEN -2 AND 4)";
+                break;
+        }
+        $search = "";
+        if (isset($category) && isset($keyword)) {
+            $search = "AND ($category LIKE '%$keyword%')";
+        }
+        else {
+            $search = "";
+        }
+        $sql = "SELECT * FROM persons
+                $text
+                $search
                 ORDER BY `group`";
 
         $stmt = DB::connect()->prepare($sql);

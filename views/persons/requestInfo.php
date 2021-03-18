@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Patient Form</title>
     <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
     <style>
         form {
             width: 50%;
@@ -101,12 +103,11 @@
                 <legend>
                     Nhập thông tin cách ly
                 </legend>
-                <?php $contact = Contact::getContact($person->identity_number, $id) ?>
                 <label for="contact_day">Thời điểm tiếp xúc:</label></br>
                 <input type="date" name="contact_day" value="<?php echo $contact->contact_day ?>" readonly></br>
                 <label for="contact_place">Địa điểm tiếp xúc:</label></br>
                 <input type="text" name="contact_place" value="<?php echo $contact->contact_place ?>" readonly></br>
-                <input type="text" name="contact_id" value="<?php echo $person->identity_number ?>" readonly>
+                <input type="text" name="contact_id" value="<?php echo $person->identity_number?>" hidden>
                 <?php
                     $siteOptions = "";
                     foreach($siteList as $site) {

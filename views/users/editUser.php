@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Hospital Form</title>
+    <title>Edit Quarantine user Form</title>
     <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
     <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
@@ -62,23 +62,29 @@
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div>
-        <h1>Trang nhập thông tin bệnh viện</h1>
+        <h1>Trang đổi mật khẩu</h1>
     </div>
+    <?php
+        if (isset($_SESSION["failmessage"])) {
+            echo '<div class="alert alert-danger" role="alert">
+                    ' . $_SESSION["failmessage"] . '
+              </div>';
+            $_SESSION["failmessage"] = NULL;
+        }
+        ?>
     <div>
         <form method="POST">
             <fieldset>
                 <legend>
-                    Nhập thông tin bệnh viện
+                    Yêu cầu nhập mật khẩu cũ và mới:
                 </legend>
-                <label for="name">Tên bệnh viện</label></br>
-                <input type="text" name="name"></br>
-                <label for="address">Địa chỉ</label></br>
-                <input type="text" name="address"></br>
-                <label for="capacity">Số giường:</label></br>
-                <input type="number" name="capacity" value=""></br>
-                <label for="phone_number">Số điện thoại:</label></br>
-                <input type="number" name="phone_number"></br>
-                <input type="submit" value="Nhập">
+                <label for="password">Mật khẩu cũ</label></br>
+                <input type="password" name="oldPassword"></br>
+                <label for="password">Mật khẩu mới</label></br>
+                <input type="password" name="password"></br>
+                <label for="confirm">Xác nhận lại mật khẩu</label></br>
+                <input type="password" name="confirm"></br>
+                <input type="submit" value="Chỉnh sửa">
             </fieldset>
         </form>
     </div>

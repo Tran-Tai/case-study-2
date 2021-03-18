@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quarantine Site Detail Form</title>
     <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
     <style>
         form {
             width: 50%;
@@ -80,23 +82,23 @@
 
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
-    <div>
+    <div class="text-center">
         <h1>Trang thông tin cơ sở cách ly</h1>
     </div>
     <div>
-        <div class='info'>
+        <div class='info mx-auto'>
             <fieldset>
                 <legend>Thông tin cơ sở cách ly</legend>
                 <label>Tên cơ sở cách ly: </label>
-                <p><?php echo $site->name ?></p></br>
+                <p><?php echo $site->name ?></p>
                 <label>Địa chỉ: </label>
-                <p><?php echo $site->address ?></p></br>
+                <p><?php echo $site->address ?></p>
                 <label>Số điện thoại: </label>
-                <p><?php echo $site->phone_number ?></p></br>
+                <p><?php echo $site->phone_number ?></p>
                 <label>Số giường: </label>
-                <p><?php echo $site->capacity ?></p></br>
+                <p><?php echo $site->capacity ?></p>
                 <label>Số giường trống: </label>
-                <p><?php echo ($site->capacity - $site->used_bed) ?></p></br>
+                <p><?php echo ($site->capacity - $site->used_bed) ?></p>
 
                 <?php echo "<a href='?controller=sites&action=edit&id=$site->id'>
                             <button>Chỉnh sửa thông tin</button>

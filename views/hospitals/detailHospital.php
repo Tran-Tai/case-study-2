@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Detail Form</title>
     <link rel="stylesheet" href="/assets/styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
     <style>
         form {
             width: 50%;
@@ -80,23 +82,23 @@
 
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
-    <div>
+    <div class="text-center">
         <h1>Trang thông tin bệnh viện</h1>
     </div>
     <div>
-        <div class='info'>
+        <div class='info mx-auto'>
             <fieldset>
                 <legend>Thông tin bệnh viện</legend>
                 <label>Tên bệnh viện: </label>
-                <p><?php echo $hospital->name ?></p></br>
+                <p><?php echo $hospital->name ?></p>
                 <label>Địa chỉ: </label>
-                <p><?php echo $hospital->address ?></p></br>
+                <p><?php echo $hospital->address ?></p>
                 <label>Số điện thoại: </label>
-                <p><?php echo $hospital->phone_number ?></p></br>
+                <p><?php echo $hospital->phone_number ?></p>
                 <label>Số giường: </label>
-                <p><?php echo $hospital->capacity ?></p></br>
+                <p><?php echo $hospital->capacity ?></p>
                 <label>Số giường trống: </label>
-                <p><?php echo ($hospital->capacity - $hospital->used_bed) ?></p></br>
+                <p><?php echo ($hospital->capacity - $hospital->used_bed) ?></p>
 
                 <?php echo "<a href='?controller=hospitals&action=edit&id=$hospital->id'>
                             <button>Chỉnh sửa thông tin</button>

@@ -1,18 +1,18 @@
 <?php
-
+session_start();
 include_once("DB.php");
 
     $controller = $_GET["controller"] ?? NULL;
     $action = $_GET["action"] ?? NULL;
 
     if (!isset($controller)) {
-        $controller = "persons";
-        $action = "list";
+        $controller = "users";
+        $action = "login";
     }
 
     function insertActive($controllerName)
     {
-        $controller = $_GET["controller"] ?? "persons";
+        $controller = $_GET["controller"] ?? "users";
         if ($controller == $controllerName)
         {
             echo "active";
