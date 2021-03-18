@@ -62,10 +62,10 @@
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div>
-        <h1>Trang chỉnh sửa thông tin cơ sở cách ly</h1>
+        <h1 class="text-center">Trang chỉnh sửa thông tin cơ sở cách ly</h1>
     </div>
     <div>
-        <form method="POST">
+        <form class="mx-auto" method="POST">
             <fieldset>
                 <legend>
                     Nhập thông tin cơ sở cách ly

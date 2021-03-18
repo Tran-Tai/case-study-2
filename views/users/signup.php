@@ -14,7 +14,7 @@
 <body>
     <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div class="text-center">
-        <h1>Trang đăng ký tài khoản</h1>
+        <h1 class="text-center">Trang đăng ký tài khoản</h1>
     </div>
     <div class="text-center container col-10">
         <?php

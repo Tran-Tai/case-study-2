@@ -73,7 +73,7 @@
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div>
-        <h1>Trang nhập thông tin tiếp xúc</h1>
+        <h1 class="text-center">Trang nhập thông tin tiếp xúc</h1>
     </div>
     <div>
         <?php

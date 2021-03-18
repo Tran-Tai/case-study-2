@@ -34,7 +34,7 @@
 
 <body>
     <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
-    <table>
+    <table class="mx-auto">
         <thead>
             <tr>
                 <th class="text-center" colspan="6">Danh sách người dùng</th>

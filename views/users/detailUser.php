@@ -83,7 +83,7 @@
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div>
-        <h1>Trang thông tin người dùng</h1>
+        <h1 class="text-center">Trang thông tin người dùng</h1>
     </div>
     <?php
         if (isset($_SESSION["message"])) {
@@ -94,7 +94,7 @@
         }
         ?>
     <div>
-        <div class='info'>
+        <div class='info mx-auto'>
         <?php 
             switch ($user->status) {
                     case 0:
@@ -108,13 +108,13 @@
             <fieldset>
                 <legend>Thông tin người dùng</legend>
                 <label>Tên người dùng: </label>
-                <p><?php echo $user->user_name ?></p></br>
+                <p><?php echo $user->user_name ?></p>
                 <label>Tên hiển thị: </label>
-                <p><?php echo $user->display_name ?></p></br>
+                <p><?php echo $user->display_name ?></p>
                 <label>Tài khoản: </label>
-                <p><?php echo $user->account ?></p></br>
+                <p><?php echo $user->account ?></p>
                 <label>Trạng thái: </label>
-                <p><?php echo $status ?></p></br>
+                <p><?php echo $status ?></p>
 
                 <?php echo "<a href='?controller=users&action=edit&id=$user->id'>
                             <button>Đổi mật khẩu</button>

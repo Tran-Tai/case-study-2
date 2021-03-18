@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
     <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
     <style>
-        table {
+        /* table {
             margin: auto;
             border-collapse: collapse;
             border: 2px solid black;
@@ -27,25 +27,25 @@
             padding: 5px;
             text-align: center;
             font-size: 18px;
-        }
+        } */
     </style>
 </head>
 
 <body>
     <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
-    <table>
+    <table class="mx-auto mt-5 table-bordered table-striped table-hover">
         <thead>
             <tr>
-                <th class="text-center" colspan="7">Danh sách cơ sở cách ly</th>
+                <th  class="p-1 text-center" colspan="7">Danh sách cơ sở cách ly</th>
             </tr>
-            <tr>
-                <th>STT</th>
-                <th>Tên cơ sở cách ly</th>
-                <th>Địa Chỉ</th>
-                <th>Tổng số giường</th>
-                <th>Số giường trống</th>
-                <th>Số điện thoại</th>
-                <th></th>
+            <tr class="text-center">
+                <th class="p-1">STT</th>
+                <th class="p-1">Tên cơ sở cách ly</th>
+                <th class="p-1">Địa Chỉ</th>
+                <th class="p-1">Tổng số giường</th>
+                <th class="p-1">Số giường trống</th>
+                <th class="p-1">Số điện thoại</th>
+                <th class="p-1"></th>
             </tr>
         </thead>
         <tbody>
@@ -56,13 +56,13 @@
                         </a>";
                 echo "
             <tr>
-                <td>" . ($key + 1) . "</td>
-                <td>$site->name</td>
-                <td>$site->address</td>
-                <td>$site->capacity</td>
-                <td>" . $site->capacity - $site->used_bed . "</td>
-                <td>$site->phone_number</td>
-                <td>$content</td>
+                <td class='p-1'>" . ($key + 1) . "</td>
+                <td class='p-1'>$site->name</td>
+                <td class='p-1'>$site->address</td>
+                <td class='p-1'>$site->capacity</td>
+                <td class='p-1'>" . $site->capacity - $site->used_bed . "</td>
+                <td class='p-1'>$site->phone_number</td>
+                <td class='p-1'>$content</td>
             </tr>
             ";
             }
@@ -70,8 +70,8 @@
         </tbody>
     </table>
     <div class="text-center">
-        <a href='?controller=sites&action=add'>
-            <button class="input_info">Thêm thông tin cơ sở cách ly mới</button>
+        <a type="button" class="btn-info m-3 p-3 rounded" href='?controller=sites&action=add'>
+            Thêm thông tin cơ sở cách ly mới
         </a>
     </div>
 

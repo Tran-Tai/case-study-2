@@ -23,7 +23,7 @@
         }
     ?>
     <div class="text-center">
-        <h1>Trang đăng nhập</h1>
+        <h1 class="text-center">Trang đăng nhập</h1>
     </div>
     <div class="text-center container col-10">
         <?php

@@ -62,7 +62,7 @@
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div>
-        <h1>Trang đổi mật khẩu</h1>
+        <h1 class="text-center">Trang đổi mật khẩu</h1>
     </div>
     <?php
         if (isset($_SESSION["failmessage"])) {
@@ -73,7 +73,7 @@
         }
         ?>
     <div>
-        <form method="POST">
+        <form class="mx-auto" method="POST">
             <fieldset>
                 <legend>
                     Yêu cầu nhập mật khẩu cũ và mới:

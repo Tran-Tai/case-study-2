@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/assets/styles/bootstrap.css" />
     <link rel="stylesheet" href="/assets/styles/bootstrap-grid.css" />
     <style>
-        table {
+        /* table {
             margin: auto;
             border-collapse: collapse;
             border: 2px solid black;
@@ -27,25 +27,25 @@
             padding: 5px;
             text-align: center;
             font-size: 18px;
-        }
+        } */
     </style>
 </head>
 
 <body>
     <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
-    <table>
+    <table class="mx-auto mt-5 table-bordered table-striped table-hover">
         <thead>
             <tr>
-                <th class="text-center" colspan="7">Danh sách bệnh viện</th>
+                <th  class="p-1 text-center" colspan="7">Danh sách bệnh viện</th>
             </tr>
-            <tr>
-                <th>STT</th>
-                <th>Tên bệnh viện</th>
-                <th>Địa Chỉ</th>
-                <th>Số giường bệnh</th>
-                <th>Số giường trống</th>
-                <th>Số điện thoại</th>
-                <th></th>
+            <tr class="text-center">
+                <th class="p-1">STT</th>
+                <th class="p-1">Tên bệnh viện</th>
+                <th class="p-1">Địa Chỉ</th>
+                <th class="p-1">Số giường bệnh</th>
+                <th class="p-1">Số giường trống</th>
+                <th class="p-1">Số điện thoại</th>
+                <th class="p-1"></th>
             </tr>
         </thead>
         <tbody>
@@ -56,13 +56,13 @@
                         </a>";
                 echo "
             <tr>
-                <td>" . ($key + 1) . "</td>
-                <td>$hospital->name</td>
-                <td>$hospital->address</td>
-                <td>$hospital->capacity</td>
-                <td>" . $hospital->capacity - $hospital->used_bed . "</td>
-                <td>$hospital->phone_number</td>
-                <td>$content</td>
+                <td class='p-1'>" . ($key + 1) . "</td>
+                <td class='p-1'>$hospital->name</td>
+                <td class='p-1'>$hospital->address</td>
+                <td class='p-1'>$hospital->capacity</td>
+                <td class='p-1'>" . $hospital->capacity - $hospital->used_bed . "</td>
+                <td class='p-1'>$hospital->phone_number</td>
+                <td class='p-1'>$content</td>
             </tr>
             ";
             }
@@ -70,8 +70,8 @@
         </tbody>
     </table>
     <div class="text-center">
-        <a href='?controller=hospitals&action=add'>
-            <button class="input_info">Thêm thông tin bệnh viện mới</button>
+        <a type="button" class="btn-info m-3 p-3 rounded" href='?controller=hospitals&action=add'>
+            Thêm thông tin bệnh viện mới
         </a>
     </div>
 

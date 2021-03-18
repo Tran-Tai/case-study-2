@@ -83,7 +83,7 @@
 <body>
 <?php include_once("/Codegym/Module2/case_study/views/header.php") ?>
     <div class="text-center">
-        <h1>Trang thông tin cơ sở cách ly</h1>
+        <h1 class="text-center">Trang thông tin cơ sở cách ly</h1>
     </div>
     <div>
         <div class='info mx-auto'>
