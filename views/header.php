@@ -1,7 +1,7 @@
 <?php
 $action = $_GET["action"] ?? NULL;
 if (!isset($_SESSION["login"]) || (!$_SESSION["login"])) {
-  if ($action != "login") {
+  if (($action != "login") && ($action != "signup")) {
     if (!isset($_SESSION["failmessage"]))
     $_SESSION["failmessage"] = "Bạn không có quyền truy cập trang này, vui lòng đăng nhập";
     header("location:?controller=users&action=login");

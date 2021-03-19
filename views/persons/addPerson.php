@@ -211,7 +211,9 @@
         </form>
     </div>
     <div>
-        <button>Hoàn thành nhập thông tin</button>
+    <a type="button" class="btn-info m-3 p-3 rounded" target="_blank" href="?controller=persons&action=list">
+            Hoàn thành nhập thông tin
+        </a>
     </div>
 </body>
 
